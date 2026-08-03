@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ============================================================
+   Chrono · Digital Clock — global styles & design tokens
+   ============================================================
+   Every color in the app flows from these CSS custom properties.
+   `data-theme="dark"` (the default, declared on :root) is
+   overridden by `data-theme="light"` on <html>.
+   ============================================================ */
+
+:root {
+  color-scheme: dark;
+
+  /* Glassmorphism surfaces */
+  --glass-bg: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.16);
+  --glass-highlight: rgba(255, 255, 255, 0.12);
+
+  /* Text */
+  --text-primary: #f1f5f9;
+  --text-secondary: rgba(226, 232, 240, 0.72);
+  --text-muted: rgba(203, 213, 225, 0.5);
+
+  /* Accents & glow */
+  --accent-1: #22d3ee; /* cyan — seconds, AM/PM, highlights */
+  --accent-2: #818cf8; /* indigo — floating orb */
+  --glow: rgba(34, 211, 238, 0.5);
+
+  /* Depth */
+  --shadow: 0 24px 60px rgba(2, 6, 23, 0.55), 0 4px 18px rgba(2, 6, 23, 0.35);
+
+  /* Buttons */
+  --btn-bg: rgba(255, 255, 255, 0.08);
+  --btn-bg-hover: rgba(255, 255, 255, 0.16);
+
+  --live: #34d399;
+
+  --font-display: 'Orbitron', 'Segoe UI', ui-monospace, monospace;
+  --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --glass-bg: rgba(255, 255, 255, 0.5);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-highlight: rgba(255, 255, 255, 0.55);
+
+  --text-primary: #1e293b;
+  --text-secondary: rgba(30, 41, 59, 0.72);
+  --text-muted: rgba(51, 65, 85, 0.52);
+
+  --accent-1: #6366f1;
+  --accent-2: #ec4899;
+  --glow: rgba(99, 102, 241, 0.32);
+
+  --shadow: 0 24px 60px rgba(88, 80, 155, 0.25), 0 4px 18px rgba(88, 80, 155, 0.15);
+
+  --btn-bg: rgba(255, 255, 255, 0.55);
+  --btn-bg-hover: rgba(255, 255, 255, 0.9);
+
+  --live: #059669;
+}
+
+/* ------------------------------ Reset ------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /*
+   * The dark gradient always renders as the base layer on <html> (it covers
+   * the whole viewport). A light-gradient overlay on body::before fades in
+   * above it for the light theme — a cross-fade between two layers gives a
+   * smooth transition, since gradients themselves can't be interpolated.
+   */
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #312e81 100%);
+  background-size: 300% 300%;
+  animation: gradientShift 20s ease infinite;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transition: color 0.45s ease;
+}
+
+/* Light-theme gradient overlay (cross-fades in above the dark base) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, #fde68a 0%, #fbcfe8 45%, #c7d2fe 100%);
+  background-size: 300% 300%;
+  animation: gradientShift 20s ease infinite;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+[data-theme='light'] body::before {
+  opacity: 1;
+}
+
+@keyframes gradientShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* ----------------------- Accessibility helpers ----------------------- */
+
+/* Keyboard focus ring — visible only for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--accent-1);
+  outline-offset: 3px;
+}
+
+/* Visually hidden, but announced by screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
